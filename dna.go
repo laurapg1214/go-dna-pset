@@ -75,9 +75,10 @@ func main() {
 					fmt.Println("Error")
 				}
 				// check for match
+				fmt.Println(key, strMatches, personStrCount, csvPerson["name"])
 				if strMatches == personStrCount {
 					matches++
-					continue
+					fmt.Println(matches, csvPerson["name"])
 				} else {
 					matches = 0
 					break
