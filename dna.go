@@ -22,6 +22,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -53,33 +54,35 @@ func main() {
 	}
 	defer csvFile.Close()
 
-	// CSVToMap takes a reader and returns an array of maps, using the header row as the keys
-	// adapted from https://gist.github.com/drernie/5684f9def5bee832ebc50cabb46c377a
-
 	// read csv data into array of maps
 	csvReader := csv.NewReader(csvFile)
 	csvMaps := CSVToMap(csvFile, csvReader)
-	fmt.Println(csvMaps)
-
-	// initialize map to store indiv maps in csvMaps
-	mapsCount := len(csvMaps)
-	fmt.Println(mapsCount)
 	
 	// loop through maps, find longest match of database STRs in sequence
-	for i := 0; i < mapsCount; i++ {
-		csvPerson := csvMaps[i]
+	for person := range csvMaps {
+		csvPerson := csvMaps[person]
 		fmt.Println(csvPerson)
 		
 		for key := range csvPerson {
 			if key != "name" {
 				// count occurrences of str in sequence
 				strMatches := strings.Count(string(sequence), key) 
-				fmt.Println(strMatches)
+				personStrCount, err := strconv.Atoi(csvPerson[key])
+				if err != nil {
+					fmt.Println("Error")
+				}
+				if strMatches != personStrCount {
+					fmt.Println("No match")
+					break
+				}
 			}
 		}
+		fmt.Println(csvPerson["name"])
 	}
 }
 
+// CSVToMap takes a reader and returns an array of maps, using the header row as the keys
+// adapted from https://gist.github.com/drernie/5684f9def5bee832ebc50cabb46c377a
 func CSVToMap(csvFile *os.File, csvReader *csv.Reader) []map[string]string {
 	rows := []map[string]string{}
 	var header []string
