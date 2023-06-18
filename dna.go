@@ -22,7 +22,7 @@ import (
 	"io"
 	"log"
 	"os"
-	//"strings"
+	"strings"
 )
 
 func main() {
@@ -61,27 +61,23 @@ func main() {
 	csvMaps := CSVToMap(csvFile, csvReader)
 	fmt.Println(csvMaps)
 
-	// initialize slice to store STR counts
-	STRcounts := []int{}
-	fmt.Println(STRcounts)
-
 	// initialize map to store indiv maps in csvMaps
 	mapsCount := len(csvMaps)
 	fmt.Println(mapsCount)
 	
+	// loop through maps, find longest match of database STRs in sequence
 	for i := 0; i < mapsCount; i++ {
 		csvPerson := csvMaps[i]
 		fmt.Println(csvPerson)
+		
+		for key := range csvPerson {
+			if key != "name" {
+				// count occurrences of str in sequence
+				strMatches := strings.Count(string(sequence), key) 
+				fmt.Println(strMatches)
+			}
+		}
 	}
-	fmt.Print(string(sequence))
-
-	// loop through maps, find longest match of database STRs in sequence
-	//STRnum := len(csvMaps[0]) - 1
-	
-	//for i := 0; i < STRnum; i++ {
-		//str := csvMaps[i]
-	//}
-
 }
 
 func CSVToMap(csvFile *os.File, csvReader *csv.Reader) []map[string]string {
