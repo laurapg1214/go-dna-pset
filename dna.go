@@ -59,26 +59,37 @@ func main() {
 	csvMaps := CSVToMap(csvFile, csvReader)
 	
 	// loop through maps, find longest match of database STRs in sequence
+	matches := 0
+	strMatches := 0
+	personStrCount := 0
+
 	for person := range csvMaps {
 		csvPerson := csvMaps[person]
-		fmt.Println(csvPerson)
 		
 		for key := range csvPerson {
 			if key != "name" {
 				// count occurrences of str in sequence
-				strMatches := strings.Count(string(sequence), key) 
-				personStrCount, err := strconv.Atoi(csvPerson[key])
+				strMatches = strings.Count(string(sequence), key) 
+				personStrCount, err = strconv.Atoi(csvPerson[key])
 				if err != nil {
 					fmt.Println("Error")
 				}
-				if strMatches != personStrCount {
-					fmt.Println("No match")
+				// check for match
+				if strMatches == personStrCount {
+					matches++
+					continue
+				} else {
+					matches = 0
 					break
 				}
 			}
 		}
-		fmt.Println(csvPerson["name"])
+		if matches == len(csvPerson) - 1 {
+			fmt.Println(csvPerson["name"])
+			return
+		} 
 	}
+	fmt.Println("No match")
 }
 
 // CSVToMap takes a reader and returns an array of maps, using the header row as the keys
