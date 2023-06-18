@@ -43,9 +43,6 @@ func main() {
 		log.Fatalf("Unable to read file: %v", err)
 	}
 
-	// initialize slice for names
-	names := []string{}
-
 	// create map for csv file
 	csvFile, err := os.Open(csvFilename)
 
@@ -68,7 +65,7 @@ func main() {
 	//}
 
 	csvReader := csv.NewReader(csvFile)
-	CSVToMap(csvFile, csvReader)
+	fmt.Println(CSVToMap(csvFile, csvReader))
 
 	//csvData, err := csvReader.ReadAll()
 
