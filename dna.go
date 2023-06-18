@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"os"
 	"strconv"
-	"strings"
 )
 
 func main() {
@@ -62,23 +62,21 @@ func main() {
 	matches := 0
 	strMatches := 0
 	personStrCount := 0
-
+	
 	for person := range csvMaps {
 		csvPerson := csvMaps[person]
-		
+
 		for key := range csvPerson {
 			if key != "name" {
-				// count occurrences of str in sequence
-				strMatches = strings.Count(string(sequence), key) 
+				// count consecutive occurrences of str in sequence
+				strMatches = longestMatch(string(sequence), string(key))
 				personStrCount, err = strconv.Atoi(csvPerson[key])
 				if err != nil {
 					fmt.Println("Error")
 				}
 				// check for match
-				fmt.Println(key, strMatches, personStrCount, csvPerson["name"])
 				if strMatches == personStrCount {
 					matches++
-					fmt.Println(matches, csvPerson["name"])
 				} else {
 					matches = 0
 					break
@@ -117,4 +115,41 @@ func CSVToMap(csvFile *os.File, csvReader *csv.Reader) []map[string]string {
 		}
 	}
 	return rows
+}
+
+// conversion to Go & slight adaptation of function written by CS50 for problem set
+func longestMatch (sequence string, key string) int {
+	
+	// initialize variables
+	var longestRun float64 = 0
+	strLength := len(key)
+	sequenceLength := len(string(sequence))
+
+	// check each character in sequence for most consecutive runs of subsequence
+	for i := 0; i < sequenceLength; i++ {
+		// initialize count of consecutive runs
+		var count float64 = 0
+
+		// check for str (key) match
+		// if match, move substring to next potential match in sequence
+		// continue until out of consecutive matches
+		for {
+			// adjust substring start and end
+			start := i + int(count) * strLength
+			if start + strLength > sequenceLength {
+				break
+			}
+			end := start + strLength
+
+			// if match in the substring
+			if sequence[start:end] == key {
+				count++
+			} else {
+				break
+			}	
+		}
+		// update most consecutive matches found
+		longestRun = math.Max(longestRun, count)
+	}
+	return int(longestRun)
 }
