@@ -22,6 +22,7 @@ import (
 	"io"
 	"log"
 	"os"
+	//"strings"
 )
 
 func main() {
@@ -55,55 +56,31 @@ func main() {
 	// CSVToMap takes a reader and returns an array of maps, using the header row as the keys
 	// adapted from https://gist.github.com/drernie/5684f9def5bee832ebc50cabb46c377a
 
-	// read csv data
-	//csvReader := csv.NewReader(csvFile)
-	//csvReader.FieldsPerRecord = -1 // allow variable number of fields
-	//csvReader.Columns, err = csvReader.ReadHeader()
-	//if err != nil {
-		//fmt.Println(err)
-		//return
-	//}
-
+	// read csv data into array of maps
 	csvReader := csv.NewReader(csvFile)
-	fmt.Println(CSVToMap(csvFile, csvReader))
-
-	//csvData, err := csvReader.ReadAll()
-
-	// error checking
-	//if err != nil {
-		//panic(err)
-	//}
-
-	// TESTING print one record
-	//fmt.Println(csvData[1]["name"])
-
-	// TESTING print csv data
-	//for _, row := range csvData {
-		//for _, col := range row {
-			//fmt.Printf("%s,", col)
-		//}
-		//fmt.Println()
-	//}
-	fmt.Print(string(sequence))
-	//fmt.Println(names)
-
-	// loop through csv file to append info to names[]
-	//for _, row := range csvData {
-		//for _, col := range row {
-			//names = append(names, col)
-		//}
-	//}
+	csvMaps := CSVToMap(csvFile, csvReader)
+	fmt.Println(csvMaps)
 
 	// initialize slice to store STR counts
 	STRcounts := []int{}
-
-	// TESTING print STRcounts
 	fmt.Println(STRcounts)
 
-	// initialize map for names
-	// STRmap := map[string]int {
-		
-	// }
+	// initialize map to store indiv maps in csvMaps
+	mapsCount := len(csvMaps)
+	fmt.Println(mapsCount)
+	
+	for i := 0; i < mapsCount; i++ {
+		csvPerson := csvMaps[i]
+		fmt.Println(csvPerson)
+	}
+	fmt.Print(string(sequence))
+
+	// loop through maps, find longest match of database STRs in sequence
+	//STRnum := len(csvMaps[0]) - 1
+	
+	//for i := 0; i < STRnum; i++ {
+		//str := csvMaps[i]
+	//}
 
 }
 
